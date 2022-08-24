@@ -7,4 +7,7 @@ sudo apt install tightvncserver
 vncserver
 vncserver -kill :1
 mv ~/.vnc/xstartup ~/.vnc/xstartup.bak
-wget htt
+wget https://raw.githubusercontent.com/AyonovDenizs/setuping435/ayden/xstartup
+mv xstartup ~/.vnc/xstartup
+sudo chmod +x ~/.vnc/xstartup
+vncserver -localhost
