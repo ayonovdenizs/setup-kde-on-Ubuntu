@@ -1,4 +1,6 @@
-# setuping435
+# Description (English) 
 This simple script for install KDE and VNC server on Ubuntu (server host)
 
-### tested on immers cloud
+# Описание (русский)
+Это простенький скрипт для установки KDE и VNC сервера на Ubuntu (сервер)
+
