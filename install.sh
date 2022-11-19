@@ -3,7 +3,7 @@ echo Starting install...
 echo Запуск установки...
 sleep 2
 clear
-echo Step 1. Update and upgrade lib's
+echo Step 1. Update and upgrade lib
 echo Шаг 1. Обновление и апгрейт библиотек
 sleep 2
 sudo apt update
