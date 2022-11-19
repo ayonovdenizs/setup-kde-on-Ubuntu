@@ -40,4 +40,3 @@ sudo chmod +x ~/.vnc/xstartup
 vncserver -localhost
 echo "успешно установлено."
 echo "Successfully installed."
-
