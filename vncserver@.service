@@ -1,17 +1,35 @@
+# vncserver@.service — template for one VNC session per display number.
+#
+# The USER, GROUP, HOME, VNC_BIN, GEOMETRY, DEPTH and LOCALHOST placeholders
+# below are substituted by install.sh, which writes the result to
+# /etc/systemd/system/vncserver@.service. Do not enable this file straight from
+# the repository — systemd cannot run it with the placeholders in place.
+#
+#   sudo systemctl start vncserver@1      # display :1 -> port 5901
+#   sudo systemctl start vncserver@2      # display :2 -> port 5902
+
 [Unit]
-Description=Start TightVNC server at startup
-After=syslog.target network.target
+Description=VNC server for @USER@ on display :%i
+Documentation=https://github.com/AyonovDenizs/setup-kde-on-Ubuntu
+After=network-online.target
+Wants=network-online.target
 
 [Service]
 Type=forking
-User=ubuntu
-Group=ubuntu
-WorkingDirectory=/home/ubuntu
+User=@USER@
+Group=@GROUP@
+WorkingDirectory=@HOME@
 
-PIDFile=/home/ubuntu/.vnc/%H:%i.pid
-ExecStartPre=-/usr/bin/vncserver -kill :%i > /dev/null 2>&1
-ExecStart=/usr/bin/vncserver -depth 24 -geometry 1280x800 -localhost :%i
-ExecStop=/usr/bin/vncserver -kill :%i
+PIDFile=@HOME@/.vnc/%H:%i.pid
+# leading '-' = a failed pre-kill (no old session running) is not an error.
+# No shell redirections here: systemd passes them to the binary as arguments.
+ExecStartPre=-@VNC_BIN@ -kill :%i
+ExecStart=@VNC_BIN@ -depth @DEPTH@ -geometry @GEOMETRY@ @LOCALHOST@ :%i
+ExecStop=@VNC_BIN@ -kill :%i
+
+Restart=on-failure
+RestartSec=5
+TimeoutSec=60
 
 [Install]
 WantedBy=multi-user.target
