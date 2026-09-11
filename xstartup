@@ -1,3 +1,33 @@
-#!/bin/bash
-xrdb $HOME/.Xresources
-startxfce4 &
+#!/usr/bin/env bash
+#
+# ~/.vnc/xstartup — started by the VNC server for every new session.
+# install.sh copies this file there; edit the copy in ~/.vnc to customise
+# your own session.
+#
+set -u
+
+unset SESSION_MANAGER
+unset DBUS_SESSION_BUS_ADDRESS
+
+# Merge user X resources if present
+if command -v xrdb >/dev/null 2>&1 && [ -f "$HOME/.Xresources" ]; then
+    xrdb -merge "$HOME/.Xresources"
+fi
+
+# Plasma (and most Qt/GTK apps) needs a session bus
+if command -v dbus-launch >/dev/null 2>&1; then
+    eval "$(dbus-launch --sh-syntax)"
+fi
+
+# exec keeps the desktop in the foreground: if this script returns, the VNC
+# server treats the session as finished and shuts it down.
+if command -v startplasma-x11 >/dev/null 2>&1; then
+    exec startplasma-x11              # KDE Plasma 5.17+ and 6.x
+elif command -v startkde >/dev/null 2>&1; then
+    exec startkde                     # KDE Plasma < 5.17
+elif command -v startxfce4 >/dev/null 2>&1; then
+    exec startxfce4                   # XFCE, when Plasma is not installed
+fi
+
+echo "xstartup: no KDE or XFCE session found in PATH" >&2
+exec xterm
